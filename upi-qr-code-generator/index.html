@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UPI QR Code Generator: Payment QR for GPay, PhonePe, Paytm, Free | QR Studio</title>
+<meta name="description" content="Make a UPI payment QR code with your UPI ID, name and an optional fixed amount. Works with GPay, PhonePe, Paytm and BHIM. Free, no sign-up.">
+<link rel="canonical" href="https://safi-urrehman9.github.io/qr-studio/upi-qr-code-generator/">
+<meta property="og:title" content="UPI QR Code Generator: Payment QR for GPay, PhonePe, Paytm, Free | QR Studio">
+<meta property="og:description" content="Make a UPI payment QR code with your UPI ID, name and an optional fixed amount. Works with GPay, PhonePe, Paytm and BHIM. Free, no sign-up.">
+<meta property="og:type" content="website">
+<link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/jsQR.min.js" defer></script>
+<script src="../assets/qrcode.min.js" defer></script>
+<script src="../assets/jszip.min.js" defer></script>
+<script src="../assets/parse.js" defer></script>
+<script src="../assets/insights.js" defer></script>
+<script type="module" src="../assets/app.js"></script>
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "WebApplication", "name": "UPI payment QR · QR Studio", "description": "Make a UPI payment QR code with your UPI ID, name and an optional fixed amount. Works with GPay, PhonePe, Paytm and BHIM. Free, no sign-up.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "url": "https://safi-urrehman9.github.io/qr-studio/upi-qr-code-generator/"}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Which apps can pay with it?", "acceptedAnswer": {"@type": "Answer", "text": "Any UPI app, including Google Pay, PhonePe, Paytm and BHIM."}}, {"@type": "Question", "name": "Can the customer enter the amount?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Remove the Amount field (✕) and the payer types the amount in their app."}}, {"@type": "Question", "name": "Is this the same as my bank’s merchant QR?", "acceptedAnswer": {"@type": "Answer", "text": "It uses the standard UPI payment link format, which suits personal and small-business use. Registered merchants may get extra features (such as settlement reports) from their bank’s own QR."}}, {"@type": "Question", "name": "How do I stay safe with payment QR codes?", "acceptedAnswer": {"@type": "Answer", "text": "Always test your code by scanning it yourself, and check printed codes regularly: scammers sometimes stick their own code over a shop’s."}}, {"@type": "Question", "name": "Is it free? Do the codes expire?", "acceptedAnswer": {"@type": "Answer", "text": "Free, with no sign-up and no watermark. The codes are standard static QR codes: the content lives inside the code itself, not behind a redirect link we control, so they keep working forever, even if this website disappears."}}]}]</script>
+</head>
+<body data-tool="upi-qr-code-generator">
+<div class="wrap">
+  <header class="site">
+    <a class="brand" href="../"><svg width="28" height="28" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="8" fill="var(--accent)"/><g fill="var(--accent-text)"><rect x="6" y="6" width="7" height="7" rx="1.5"/><rect x="17" y="6" width="7" height="7" rx="1.5"/><rect x="6" y="17" width="7" height="7" rx="1.5"/><rect x="17" y="17" width="3" height="3"/><rect x="21" y="21" width="3" height="3"/></g></svg>QR Studio</a>
+    <nav><a href="../#tools">All tools</a></nav>
+  </header>
+  <div class="hero">
+    <h1>UPI payment QR code generator</h1>
+    <p>Make a payment QR with your UPI ID, name and an optional fixed amount. Works with any UPI app.</p>
+    <span class="pill">● Free · no sign-up · files never uploaded</span>
+  </div>
+
+  <div class="grid">
+    <main>
+      <section class="card" id="openCard">
+        <h2><span class="step"></span><span id="openTitle">Open a QR code</span></h2>
+        <div class="tabs" role="tablist" id="openTabs">
+          <button role="tab" aria-selected="true" data-pane="paneUpload">Upload image</button>
+          <button role="tab" aria-selected="false" data-pane="paneCamera">Use camera</button>
+        </div>
+        <div id="paneUpload">
+          <div id="drop" role="button" tabindex="0">
+            <strong>Drop a QR image here</strong>
+            <span class="muted">or click to choose · paste a screenshot with ⌘/Ctrl + V · drop several images to read them all at once</span>
+          </div>
+          <input type="file" id="file" accept="image/*" multiple hidden>
+        </div>
+        <div id="paneCamera" hidden>
+          <div class="cam"><video id="video" playsinline muted></video><div class="cam-frame" aria-hidden="true"></div></div>
+          <div class="cam-bar"><span class="muted" id="camStatus" role="status">Starting camera…</span><button id="camStop">Stop camera</button></div>
+        </div>
+        <div class="examples"><span class="muted">Or start from a template:</span></div>
+        <div class="src" id="src" hidden><img id="srcImg" alt="The QR code that was read"><div id="decodeInfo" class="muted"></div></div>
+      </section>
+
+      <section class="card" id="bulk" hidden>
+        <h2>Read <span id="bulkCount"></span> images</h2>
+        <p class="muted" id="bulkInfo" style="margin-top:0"></p>
+        <div class="table-wrap"><table><thead><tr><th>File</th><th>What’s inside</th><th>Type</th><th></th></tr></thead><tbody id="bulkRows"></tbody></table></div>
+        <div class="actions" style="max-width:420px"><button class="primary" id="bulkCsv">Download as spreadsheet (CSV)</button><button id="bulkClose">Close</button></div>
+      </section>
+
+      <section class="card" id="insideCard">
+        <h2><span class="step"></span><span id="insideTitle">See &amp; edit what’s inside</span> <span class="badge" id="format" hidden></span></h2>
+        <p class="muted" id="fieldsEmpty" style="margin:0">Open a QR code or pick a template above. Its contents will show up here as simple fields you can edit.</p>
+        <div class="insight" id="insight" hidden>
+          <div class="ins-icon" id="insIcon" aria-hidden="true"></div>
+          <div class="ins-head" id="insHead"></div>
+          <ul class="flags" id="insFlags" aria-label="Safety checks"></ul>
+        </div>
+        <div id="fields"></div>
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:8px">
+          <button class="ghost" id="addField" hidden>+ Add field</button>
+          <span class="muted" id="idHint" hidden>The highlighted row is the <b>ID</b> that counts up in a series. Tap <b>ID</b> on another row to switch.</span>
+        </div>
+        <div class="changes" id="changes" hidden>
+          <div class="changes-top"><span id="changesSummary"></span><button id="reset">↺ Reset to original</button></div>
+          <ul id="changesList"></ul>
+        </div>
+        <div class="ai" id="aiBox" hidden>
+          <p class="muted" id="aiStatus"></p>
+          <button class="ghost" id="aiBtn" title="A small AI model on your device suggests names for the fields. It never changes the data.">✦ Re-run AI naming</button>
+        </div>
+        <details>
+          <summary>Raw text inside the code (advanced)</summary>
+          <textarea id="raw" rows="4" spellcheck="false" placeholder="Or type/paste any text here"></textarea>
+        </details>
+      </section>
+
+      <section class="card" id="series">
+        <h2><span class="step"></span>Make a series <span class="muted" style="font-weight:400">(optional)</span></h2>
+        <p class="muted" style="margin-top:0">Make many codes that differ only in the ID, e.g. one per employee, ticket or asset.</p>
+        <div class="tabs" role="tablist" id="seriesTabs">
+          <button role="tab" aria-selected="true" data-pane="modeRange">Number range</button>
+          <button role="tab" aria-selected="false" data-pane="modeCsv">From spreadsheet (CSV)</button>
+        </div>
+        <div id="modeRange" class="row">
+          <label class="field">First ID <input type="text" id="start" size="18"></label>
+          <label class="field">How many <input type="number" id="count" value="10" min="1" max="5000" style="width:100px"></label>
+          <span class="muted" id="rangeHint"></span>
+        </div>
+        <div id="modeCsv" hidden>
+          <p class="muted" style="margin-top:0">One row per code. Column names must match the field names; missing columns keep today’s values. Start from the template so the columns are right.</p>
+          <div class="row"><button id="csvTemplate">Download CSV template</button><button id="csvPick">Choose CSV…</button><input type="file" id="csvFile" accept=".csv,text/csv" hidden><span class="muted" id="csvInfo"></span></div>
+        </div>
+        <div class="actions">
+          <button id="preview">Preview</button>
+          <button id="print" title="Opens your browser’s print dialog: print, or choose “Save as PDF”">🖨 Print sheet / PDF</button>
+          <button class="primary" id="zip">Download all (ZIP)</button>
+        </div>
+        <div class="row" style="margin-top:10px"><label class="field">Printed code size
+          <select id="labelSize"><option value="25">Small · 25 mm</option><option value="40" selected>Medium · 40 mm</option><option value="60">Large · 60 mm</option></select></label></div>
+        <p class="muted" id="batchInfo"></p>
+        <div id="batchGrid"></div>
+      </section>
+    </main>
+
+    <aside class="card sticky" id="outputCard">
+      <h2><span class="step"></span>Your new QR code</h2>
+      <div class="preview"><canvas id="single" width="0" height="0" role="img" aria-label="Generated QR code"></canvas></div>
+      <div class="verify" id="verify" hidden role="status"></div>
+      <p class="muted" id="singleInfo" style="margin:4px 0 0"></p>
+      <div class="actions">
+        <button class="primary" id="dlOne">Download PNG</button>
+        <button id="dlSvg" title="Sharp at any size, best for printing">SVG</button>
+        <button id="copyImg">Copy image</button>
+        <button id="copyText">Copy text</button>
+      </div>
+      <details class="aside-details">
+        <summary>Style &amp; size</summary>
+        <div class="controls">
+          <label class="full">Logo in the centre
+            <span class="logo-row"><img id="logoPrev" alt="" hidden><button id="logoPick" type="button">Add logo…</button><button id="logoRemove" type="button" class="ghost" hidden>Remove</button></span>
+            <input type="file" id="logoFile" accept="image/*" hidden></label>
+          <label>Dark colour <input type="color" id="fg" value="#000000"></label>
+          <label>Light colour <input type="color" id="bg" value="#ffffff"></label>
+          <label>Error correction
+            <select id="ec"><option value="L">Low · 7%</option><option value="M" selected>Medium · 15%</option><option value="Q">High · 25%</option><option value="H">Max · 30%</option></select></label>
+          <label>Version (grid size) <input type="number" id="ver" min="0" max="40" value="0" title="0 = smallest that fits"></label>
+          <label>Pixels per square <input type="number" id="cell" min="1" max="40" value="10"></label>
+          <label>White border <input type="number" id="margin" min="0" max="10" value="4"></label>
+          <label class="check full"><input type="checkbox" id="caption"> Print the ID under the code</label>
+        </div>
+      </details>
+    </aside>
+  </div>
+<section class="content"><h2>How it works</h2><ol class="howto"><li><b>Enter your UPI ID</b><span>Add your UPI ID and name; set an amount or remove it.</span></li><li><b>Test it</b><span>Scan the preview with your own UPI app before sharing.</span></li><li><b>Share or print</b><span>Download PNG or SVG for your counter, invoice or chat.</span></li></ol><h2>Questions</h2><div class="faq"><details><summary>Which apps can pay with it?</summary><p>Any UPI app, including Google Pay, PhonePe, Paytm and BHIM.</p></details><details><summary>Can the customer enter the amount?</summary><p>Yes. Remove the Amount field (✕) and the payer types the amount in their app.</p></details><details><summary>Is this the same as my bank’s merchant QR?</summary><p>It uses the standard UPI payment link format, which suits personal and small-business use. Registered merchants may get extra features (such as settlement reports) from their bank’s own QR.</p></details><details><summary>How do I stay safe with payment QR codes?</summary><p>Always test your code by scanning it yourself, and check printed codes regularly: scammers sometimes stick their own code over a shop’s.</p></details><details><summary>Is it free? Do the codes expire?</summary><p>Free, with no sign-up and no watermark. The codes are standard static QR codes: the content lives inside the code itself, not behind a redirect link we control, so they keep working forever, even if this website disappears.</p></details></div><h2>More free QR tools</h2><div class="tools-grid"><a class="tool-card" href="../qr-code-reader/"><span class="ic" aria-hidden="true">⌗</span><b>QR code reader</b><span>Scan a QR code from an image, screenshot or camera.</span></a><a class="tool-card" href="../edit-qr-code/"><span class="ic" aria-hidden="true">✎</span><b>Edit a QR code</b><span>Change what’s inside an existing code and download a new one.</span></a><a class="tool-card" href="../qr-code-safety-checker/"><span class="ic" aria-hidden="true">🛡</span><b>Is this QR code safe?<span class=new>NEW</span></b><span>Check a QR code for phishing and payment scams before you open it.</span></a><a class="tool-card" href="../bulk-qr-code-generator/"><span class="ic" aria-hidden="true">▦</span><b>Bulk QR code generator</b><span>Make hundreds of numbered codes from a range or a spreadsheet.</span></a><a class="tool-card" href="../bulk-qr-code-reader/"><span class="ic" aria-hidden="true">⇶</span><b>Bulk QR code reader</b><span>Read many QR images at once and export a spreadsheet.</span></a><a class="tool-card" href="../wifi-qr-code-generator/"><span class="ic" aria-hidden="true">📶</span><b>Wi-Fi QR code</b><span>Let guests join your Wi-Fi by scanning a code.</span></a><a class="tool-card" href="../upi-qr-code-generator/" aria-current=page><span class="ic" aria-hidden="true">₹</span><b>UPI payment QR</b><span>Get paid by any UPI app: GPay, PhonePe, Paytm, BHIM.</span></a><a class="tool-card" href="../vcard-qr-code-generator/"><span class="ic" aria-hidden="true">👤</span><b>Contact (vCard) QR</b><span>Share your contact details with one scan.</span></a></div></section>
+</div>
+<footer class="site"><span>QR Studio: free QR tools that run in your browser. Your files never leave your device.</span><nav><a href="../qr-code-reader/">QR code reader</a><a href="../edit-qr-code/">Edit a QR code</a><a href="../qr-code-safety-checker/">Is this QR code safe?</a><a href="../bulk-qr-code-generator/">Bulk QR code generator</a><a href="../bulk-qr-code-reader/">Bulk QR code reader</a><a href="../wifi-qr-code-generator/">Wi-Fi QR code</a><a href="../upi-qr-code-generator/">UPI payment QR</a><a href="../vcard-qr-code-generator/">Contact (vCard) QR</a></nav></footer>
+<div id="printSheet"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+</body>
+</html>

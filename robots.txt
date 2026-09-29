@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://safi-urrehman9.github.io/qr-studio/sitemap.xml
